@@ -1,0 +1,95 @@
+============================================================
+ARV AL ISOLATE — CONTAMINATION ANALYSIS REPORT
+BioProject: PRJNA1217582
+Hypothesis: S1133-like reads in AL isolate are index-hopping
+            contamination, NOT true co-infection.
+============================================================
+
+============================================================
+TEST 1: Mapping Fraction to S1133 Reference
+============================================================
+Sample          Total Reads  Mapped to S1133   % Mapped
+-------------------------------------------------------
+  AL                   37,834           36,932     97.62%
+  S1133                10,823           10,566     97.63%
+  P1                   54,544           29,517     54.12%
+  PP3                  57,596           22,441     38.96%
+  PPP                  32,859           22,991     69.97%
+  EP                   37,834           36,932     97.62%
+
+AL isolate maps 97.62% of reads to S1133 reference.
+Pure S1133 control maps 97.63% of reads to S1133 reference.
+Ratio (AL / S1133): 0.9999
+
+→ CO-INFECTION LIKELY: AL maps >5% relative to S1133 control.
+  This exceeds typical index-hopping rates (0.1-1%).
+
+============================================================
+TEST 2: Index-Hopping Rate Estimation
+============================================================
+If the S1133 control and AL isolate were sequenced on the
+same MiSeq run, index-hopping can transfer ~0.1-1% of reads
+from one sample's index to another's.
+
+S1133 control total reads: 10,823
+AL isolate total reads:    37,834
+AL reads mapped to S1133:  36,932 (97.616%)
+
+    Hop Rate   Expected S1133 reads in AL   Expected %   Observed %        Verdict
+--------------------------------------------------------------------------------
+  0.1%                                  11       0.029%      97.616%         EXCEEDS
+  0.5%                                  54       0.143%      97.616%         EXCEEDS
+  1.0%                                 108       0.286%      97.616%         EXCEEDS
+
+If 'MATCHES' at any hop rate → contamination plausible.
+If 'EXCEEDS' all hop rates   → true co-infection more likely.
+
+============================================================
+TEST 3: Per-Position Coverage Pearson Correlation
+============================================================
+Contamination prediction: AL's coverage pattern of S1133-like
+reads should closely mirror the pure S1133 control (same library
+preparation biases → high positive correlation, r ≈ 0.9+).
+Co-infection prediction: independent coverage, lower correlation.
+
+Pearson r = 0.6062  (p = 0.00e+00)
+Positions compared: 23,494
+
+→ MODERATE CORRELATION: Ambiguous. Consider other tests.
+
+============================================================
+TEST 4: Coverage Uniformity (Gini Coefficient)
+============================================================
+Contamination: S1133-like reads in AL are biased toward
+conserved/high-identity regions → uneven coverage, high Gini.
+Co-infection:  replication-driven coverage is relatively uniform,
+               Gini similar to what pure S1133 control shows.
+
+Sample         Mean Depth     Gini  Interpretation
+------------------------------------------------------------
+  AL                  342.6   0.6843  moderate
+  S1133               108.0   0.4256  moderate
+  P1                  187.7   0.6074  moderate
+  PP3                 125.7   0.6620  moderate
+  PPP                 201.6   0.7064  uneven
+  EP                  342.6   0.6843  moderate
+
+AL Gini = 0.6843, S1133 Gini = 0.4256, Difference = 0.2587
+→ AL coverage is MORE UNEVEN than S1133 control.
+  CONTAMINATION SUPPORTED — reads accumulate at conserved regions.
+
+============================================================
+OVERALL INTERPRETATION
+============================================================
+
+Contamination is SUPPORTED if:
+  ✓ AL maps <1% of reads to S1133
+  ✓ AL mapping % matches index-hopping model (<1% hop rate)
+  ✓ Per-position coverage correlation between AL and S1133 is high (r>0.85)
+  ✓ AL Gini is higher than S1133 Gini (uneven coverage)
+
+Co-infection is SUPPORTED if:
+  ✓ AL maps 5-50% of reads to S1133
+  ✓ AL mapping % exceeds all index-hopping models
+  ✓ Per-position coverage correlation is low (r<0.5)
+  ✓ AL Gini is similar to S1133 Gini (uniform coverage)
